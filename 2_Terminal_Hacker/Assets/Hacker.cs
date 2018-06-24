@@ -1,13 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
     // Game state
-    int level;
+    int target;
     enum Screen { MainMenu, Password, Win };
     Screen currentScreen;
+    string password;
 
     // Use this for initialization
     void Start () {
@@ -27,20 +29,6 @@ public class Hacker : MonoBehaviour {
         Terminal.WriteLine("Enter your selection:");
     }
 
-
-    void OnUserInput(string input)
-    {
-        if(input == "menu")
-        {
-            ShowMainMenu();
-        }
-        else if(currentScreen == Screen.MainMenu)
-        {
-            RunMainMenu(input);
-        }
-
-    }
-
     private void RunMainMenu(string input)
     {
         if (input == "007")
@@ -49,17 +37,20 @@ public class Hacker : MonoBehaviour {
         }
         else if (input == "1")
         {
-            level = 1;
+            target = 1;
+            password = "password1";
             StartGame();
         }
         else if (input == "2")
         {
-            level = 2;
+            target = 2;
+            password = "QuickBrownFox";
             StartGame();
         }
         else if (input == "3")
         {
-            level = 3;
+            target = 3;
+            password = "d3r4a1g5o9n6";
             StartGame();
         }
         else
@@ -68,10 +59,39 @@ public class Hacker : MonoBehaviour {
         }
     }
 
+    void OnUserInput(string input)
+    {
+        if (input == "menu")
+        {
+            ShowMainMenu();
+        }
+        else if (currentScreen == Screen.MainMenu)
+        {
+            RunMainMenu(input);
+        }
+        else if (currentScreen == Screen.Password)
+        {
+            CheckPassword(input);
+        }
+
+    }
+
+    void CheckPassword(string input)
+    {
+        if (input == password)
+        {
+            Terminal.WriteLine("Password attempt successful. Welcome.");
+        }
+        else
+        {
+            Terminal.WriteLine("Incorrect password entered. Try again.");
+        }
+    }
+
     void StartGame()
     {
         currentScreen = Screen.Password;
-        Terminal.WriteLine("You have chosen target " + level);
+        Terminal.WriteLine("You have chosen target " + target);
         Terminal.WriteLine("Enter the password: ");
     }
 
