@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
     // Game configuration data
-    string[] level1Passwords = {"books","aisle","shelf","password","font","borrow"};
-    string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest"};
+    string[] target1Passwords = {"books","aisle","shelf","font","borrow"};
+    string[] target2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest"};
+    string[] target3Passwords = { "spacestation", "darkmatter", "neilarmstrong", "blackhole", "moonlanding" };
 
     // Game state
     int target;
@@ -22,6 +21,11 @@ public class Hacker : MonoBehaviour {
 
 	}
 
+    private void Update()
+    {
+
+    }
+
     void ShowMainMenu()
     {
         currentScreen = Screen.MainMenu;
@@ -35,32 +39,46 @@ public class Hacker : MonoBehaviour {
 
     private void RunMainMenu(string input)
     {
-        if (input == "007")
+        bool isValidTargetNumber = (input == "1" || input == "2" || input == "3");
+        if (isValidTargetNumber)
+        {
+            target = int.Parse(input);
+            StartGame();
+        }
+        else if (input == "007")
         {
             Terminal.WriteLine("Please select a target, Mr. Bond.");
-        }
-        else if (input == "1")
-        {
-            target = 1;
-            password = level1Passwords[2];
-            StartGame();
-        }
-        else if (input == "2")
-        {
-            target = 2;
-            password = level2Passwords[4];
-            StartGame();
-        }
-        else if (input == "3")
-        {
-            target = 3;
-            password = "d3r4a1g5o9n6";
-            StartGame();
         }
         else
         {
             Terminal.WriteLine("Please choose a valid target.");
         }
+    }
+
+    void StartGame()
+    {
+        currentScreen = Screen.Password;
+        Terminal.ClearScreen();
+
+        switch (target)
+        {
+
+            case 1:
+                password = target1Passwords[Random.Range(0, target1Passwords.Length)];
+                break;
+            case 2:
+
+                password = target2Passwords[Random.Range(0, target2Passwords.Length)];
+                break;
+            case 3:
+                password = target3Passwords[Random.Range(0, target3Passwords.Length)];
+                break;
+            default:
+                Debug.LogError("Invalid target");
+                break;
+        }
+
+        Terminal.WriteLine("Enter the password: ");
     }
 
     void OnUserInput(string input)
@@ -92,11 +110,6 @@ public class Hacker : MonoBehaviour {
         }
     }
 
-    void StartGame()
-    {
-        currentScreen = Screen.Password;
-        Terminal.WriteLine("You have chosen target " + target);
-        Terminal.WriteLine("Enter the password: ");
-    }
+
 
 }
